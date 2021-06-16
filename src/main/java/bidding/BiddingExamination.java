@@ -18,7 +18,7 @@ public class BiddingExamination {
     private String phoneNumber;
 
     @PostUpdate
-    public void onPostUpdate(){
+    public void onPostUpdate() throws Exception{
         //ExaminationResultRegistered examinationResultRegistered = new ExaminationResultRegistered();
         //BeanUtils.copyProperties(this, examinationResultRegistered);
         //examinationResultRegistered.publishAfterCommit();
@@ -29,14 +29,20 @@ public class BiddingExamination {
         // 낙찰업체가 아니면 Skip.
         if(getSuccessBidderFlag() == false) return;
 
-        bidding.external.BiddingManagement biddingManagement = new bidding.external.BiddingManagement();
-        biddingManagement.setNoticeNo(getNoticeNo());
-        biddingManagement.setSuccBidderNm(getCompanyNm());
-        biddingManagement.setPhoneNumber(getPhoneNumber());
+        try{
+            // mappings goes here
+            boolean isUpdated = BiddingExaminationApplication.applicationContext.getBean(bidding.external.BiddingManagementService.class)
+            .registSucessBidder(getNoticeNo(), getCompanyNm(), getPhoneNumber());
 
-        // mappings goes here
-        BiddingExaminationApplication.applicationContext.getBean(bidding.external.BiddingManagementService.class)
-            .registSucessBidder(biddingManagement);
+            if(isUpdated == false){
+                throw new Exception("입찰관리 서비스의 입찰공고에 낙찰자 정보가 갱신되지 않음");
+            }
+        }catch(java.net.ConnectException ce){
+            throw new Exception("입찰관리 서비스 연결 실패");
+        }catch(Exception e){
+            throw new Exception("입찰관리 서비스 처리 실패");
+        }
+        
 
     }
 
