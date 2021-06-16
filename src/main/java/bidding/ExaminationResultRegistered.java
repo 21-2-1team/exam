@@ -8,6 +8,8 @@ public class ExaminationResultRegistered extends AbstractEvent {
     private Integer priceScore;
     private Integer skillScore;
     private Boolean successBidderFlag;
+    private String comapanyNm;
+    private String phoneNumber;
     
     public Long getId() {
         return id;
@@ -45,6 +47,17 @@ public class ExaminationResultRegistered extends AbstractEvent {
     public void setSuccessBidderFlag(Boolean successBidderFlag) {
         this.successBidderFlag = successBidderFlag;
     }
-
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public String getComapanyNm() {
+        return comapanyNm;
+    }
+    public void setComapanyNm(String comapanyNm) {
+        this.comapanyNm = comapanyNm;
+    }
 
 }

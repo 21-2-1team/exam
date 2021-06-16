@@ -17,11 +17,18 @@ public class PolicyHandler{
 
         System.out.println("\n\n##### listener RegistBiddingParticipation : " + biddingParticipated.toJson() + "\n\n");
 
-        // Sample Logic //
-        BiddingExamination biddingExamination = new BiddingExamination();
-        biddingExaminationRepository.save(biddingExamination);
+        if(biddingParticipated.isMe()){
+            BiddingExamination biddingExamination = new BiddingExamination();
+            biddingExamination.setNoticeNo(biddingParticipated.getNoticeNo());
+            biddingExamination.setParticipateNo(biddingParticipated.getParticipateNo());
+            biddingExamination.setCompanyNm(biddingParticipated.getCompanyNm());
+            biddingExamination.setPhoneNumber(biddingParticipated.getPhoneNumber());
+
+            biddingExaminationRepository.save(biddingExamination);
+        }
             
     }
+    
     @StreamListener(KafkaProcessor.INPUT)
     public void wheneverBiddingParticipationCanceled_CancelExaminationResults(@Payload BiddingParticipationCanceled biddingParticipationCanceled){
 
@@ -29,10 +36,11 @@ public class PolicyHandler{
 
         System.out.println("\n\n##### listener CancelExaminationResults : " + biddingParticipationCanceled.toJson() + "\n\n");
 
-        // Sample Logic //
-        BiddingExamination biddingExamination = new BiddingExamination();
-        biddingExaminationRepository.save(biddingExamination);
+        if(biddingParticipationCanceled.isMe()){
+            BiddingExamination biddingExamination = biddingExaminationRepository.findByNoticeNo(biddingParticipationCanceled.getNoticeNo());
             
+            biddingExaminationRepository.delete(biddingExamination);
+        }
     }
 
 

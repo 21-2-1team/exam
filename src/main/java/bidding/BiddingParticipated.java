@@ -13,6 +13,7 @@ public class BiddingParticipated extends AbstractEvent {
     private Integer offerPrice;
     private String offerContents;
     private Boolean feePaymentFlag;
+    private String phoneNumber;
     
     public Long getId() {
         return id;
@@ -68,6 +69,11 @@ public class BiddingParticipated extends AbstractEvent {
     public void setFeePaymentFlag(Boolean feePaymentFlag) {
         this.feePaymentFlag = feePaymentFlag;
     }
-
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
     
 }

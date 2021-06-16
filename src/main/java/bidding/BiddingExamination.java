@@ -1,7 +1,6 @@
 package bidding;
 
 import javax.persistence.*;
-import org.springframework.beans.BeanUtils;
 
 @Entity
 @Table(name="BiddingExamination_table")
@@ -15,24 +14,31 @@ public class BiddingExamination {
     private Integer priceScore;
     private Integer skillScore;
     private Boolean successBidderFlag;
+    private String companyNm;
+    private String phoneNumber;
 
     @PostUpdate
     public void onPostUpdate(){
-        ExaminationResultRegistered examinationResultRegistered = new ExaminationResultRegistered();
-        BeanUtils.copyProperties(this, examinationResultRegistered);
-        examinationResultRegistered.publishAfterCommit();
+        //ExaminationResultRegistered examinationResultRegistered = new ExaminationResultRegistered();
+        //BeanUtils.copyProperties(this, examinationResultRegistered);
+        //examinationResultRegistered.publishAfterCommit();
 
         //Following code causes dependency to external APIs
         // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
 
+        // 낙찰업체가 아니면 Skip.
+        if(getSuccessBidderFlag() == false) return;
+
         bidding.external.BiddingManagement biddingManagement = new bidding.external.BiddingManagement();
+        biddingManagement.setNoticeNo(getNoticeNo());
+        biddingManagement.setSuccBidderNm(getCompanyNm());
+        biddingManagement.setPhoneNumber(getPhoneNumber());
+
         // mappings goes here
         BiddingExaminationApplication.applicationContext.getBean(bidding.external.BiddingManagementService.class)
             .registSucessBidder(biddingManagement);
 
-
     }
-
 
     public Long getId() {
         return id;
@@ -77,7 +83,19 @@ public class BiddingExamination {
         this.successBidderFlag = successBidderFlag;
     }
 
+    public String getCompanyNm() {
+        return companyNm;
+    }
 
+    public void setCompanyNm(String companyNm) {
+        this.companyNm = companyNm;
+    }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }
