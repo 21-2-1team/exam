@@ -1,6 +1,7 @@
 package bidding;
 
 import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
 
 @Entity
 @Table(name="BiddingExamination_table")
@@ -19,9 +20,9 @@ public class BiddingExamination {
 
     @PostUpdate
     public void onPostUpdate() throws Exception{
-        //ExaminationResultRegistered examinationResultRegistered = new ExaminationResultRegistered();
-        //BeanUtils.copyProperties(this, examinationResultRegistered);
-        //examinationResultRegistered.publishAfterCommit();
+        ExaminationResultRegistered examinationResultRegistered = new ExaminationResultRegistered();
+        BeanUtils.copyProperties(this, examinationResultRegistered);
+        examinationResultRegistered.publishAfterCommit();
 
         //Following code causes dependency to external APIs
         // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
